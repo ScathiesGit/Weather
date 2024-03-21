@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>Home page</title>
+</head>
+<body>
+
+<div th:unless="${session.user}" >
+    <form action="/login">
+        <button type="submit">Login</button>
+    </form>
+    <form action="/registration">
+        <button type="submit">Registration</button>
+    </form>
+</div>
+
+<div th:if="${session.user}">
+    <div>
+        <form action="/logout" method="POST">
+            <button type="submit">Logout</button>
+        </form>
+    </div>
+    <p th:text="${session.user.username}"/>
+
+
+    <h2>Список локаций</h2>
+    <table border="1">
+        <thead>
+        <tr>
+            <th>Локация</th>
+            <th>Страна</th>
+            <th>Описание</th>
+            <th>Температура</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="weather: ${weathers}">
+            <td th:text="${weather.name}"></td>
+            <td th:text="${weather.country}"></td>
+            <td th:text="${weather.description}"></td>
+            <td th:text="${weather.temp}"></td>
+            <td>
+                <form action="/home/delete" method="post">
+                    <input type="hidden" name="name" th:value="${weather.name}">
+                    <input type="hidden" name="lat" th:value="${weather.lat}">
+                    <input type="hidden" name="lon" th:value="${weather.lon}">
+                    <button type="submit">удалить</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <br><br>
+
+    <form action="/search" method="POST">
+
+        <label for="city">city</label>
+        <input id="city" name="city" type="text"><br>
+        <label style="color: red" th:if="${reason}" th:text="${reason}"/><br>
+        <button type="submit">искать</button>
+    </form>
+</div>
+
+</body>
+</html>

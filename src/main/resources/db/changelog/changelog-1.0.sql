@@ -12,16 +12,10 @@ CREATE TABLE users
 CREATE TABLE location
 (
     id        BIGSERIAL PRIMARY KEY,
+    user_id   BIGINT      NOT NULL REFERENCES users (id),
     name      VARCHAR(64) NOT NULL,
     latitude  VARCHAR(32) NOT NULL,
-    longitude VARCHAR(32) NOT NULL
-);
-
---changeset user:3
-CREATE TABLE user_location
-(
-    user_id     BIGINT NOT NULL REFERENCES users (id),
-    location_id BIGINT NOT NULL REFERENCES users (id),
-    PRIMARY KEY (user_id, location_id)
+    longitude VARCHAR(32) NOT NULL,
+    CONSTRAINT unique_user_location UNIQUE (user_id, latitude, longitude)
 );
 

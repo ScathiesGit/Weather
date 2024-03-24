@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
 
+import static java.util.stream.Collectors.averagingDouble;
 import static java.util.stream.Collectors.toSet;
 import static org.springframework.web.client.RestClient.ResponseSpec;
 
@@ -44,7 +45,7 @@ public class WeatherServiceImpl implements WeatherService {
                 .stream()
                 .map(location -> {
                     var updWeather = findByCoordinates(location.getLat(), location.getLon());
-                    updWeather.setName(location.getName());
+                    updWeather.setName(cityName);
                     return updWeather;
                 })
                 .collect(toSet());

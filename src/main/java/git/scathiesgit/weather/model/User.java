@@ -1,6 +1,9 @@
 package git.scathiesgit.weather.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,24 +27,19 @@ public class User implements UserDetails {
     private Long id;
 
     @Column(unique = true, nullable = false)
+    @Pattern(regexp = "[a-zA-Z][a-zA-Z_\\-0-9]+",
+            message = "должно начинаться с буквы и может содержать знаки '-' '_' и цифры ")
+    @Size(min = 5, message = "не менее 5 символов")
     private String username;
 
     @Column(nullable = false)
+    @Size(min = 5, message = "не менее 5 символов")
     private String password;
 
     @Builder.Default
-    @ManyToMany
-    @JoinTable(
-            name = "user_location",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "location_id")
-    )
+    @OneToMany
+    @JoinColumn(name = "user_id")
     private List<Location> locations = new ArrayList<>();
-
-    public void addLocation(Location location) {
-        locations.add(location);
-        location.getUsers().add(this);
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

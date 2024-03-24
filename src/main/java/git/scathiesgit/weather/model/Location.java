@@ -3,13 +3,9 @@ package git.scathiesgit.weather.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = "users")
 @EqualsAndHashCode(of = {"lat", "lon"})
 @Builder
 @Entity
@@ -19,6 +15,9 @@ public class Location {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "user_id")
+    private Long userId;
+
     private String name;
 
     @Column(name = "latitude")
@@ -26,8 +25,4 @@ public class Location {
 
     @Column(name = "longitude")
     private String lon;
-
-    @Builder.Default
-    @ManyToMany(mappedBy = "locations")
-    private List<User> users = new ArrayList<>();
 }

@@ -1,7 +1,8 @@
 weather:
-  url:
-    city: https://api.openweathermap.org/geo/1.0/direct?limit=5&units=metric&lang=ru&q=%s&appid=4203d635a1c0bfba98243243a48c37f8
-    coordinates: https://api.openweathermap.org/data/2.5/weather?units=metric&lang=ru&lat=%s&lon=%s&appid=4203d635a1c0bfba98243243a48c37f8
+  weather-open-api:
+    url:
+      city: https://api.openweathermap.org/geo/1.0/direct?limit=5&units=metric&lang=ru&q=%s&appid=4203d635a1c0bfba98243243a48c37f8
+      coordinates: https://api.openweathermap.org/data/2.5/weather?units=metric&lang=ru&lat=%s&lon=%s&appid=4203d635a1c0bfba98243243a48c37f8
 
 cache:
   expire: 2000

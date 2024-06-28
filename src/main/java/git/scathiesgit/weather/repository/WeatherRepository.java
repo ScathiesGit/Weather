@@ -7,11 +7,15 @@ import java.util.Set;
 
 public interface WeatherRepository {
 
+//    Optional<Weather> findByCoordinates(String lat, String lon);
+//
+//    Set<Weather> findAllByName(String name);
+//
+//    void saveByCoordinates(Weather weather);
+//
+//    void saveByName(String cityName, Set<Weather> weathers);
+
+    Set<Weather> findByCityName(String name);
+
     Optional<Weather> findByCoordinates(String lat, String lon);
-
-    Set<Weather> findAllByName(String name);
-
-    void saveByCoordinates(Weather weather);
-
-    void saveByName(String cityName, Set<Weather> weathers);
 }

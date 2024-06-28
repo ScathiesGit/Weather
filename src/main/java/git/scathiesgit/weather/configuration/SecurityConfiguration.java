@@ -1,13 +1,12 @@
 package git.scathiesgit.weather.configuration;
 
+import git.scathiesgit.weather.dto.UserDto;
+import git.scathiesgit.weather.model.User;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,17 +22,19 @@ public class SecurityConfiguration {
         http.csrf(AbstractHttpConfigurer::disable);
 
         http.authorizeHttpRequests(req -> req
-                .requestMatchers("/registration", "/home").permitAll()
-                .anyRequest().authenticated());
+                .requestMatchers("/home", "/auth", "/auth/reg").permitAll()
+                .anyRequest().authenticated()
+        );
 
         http.formLogin(login -> login
-                .loginPage("/login")
+                .loginPage("/auth")
                 .successHandler(authSuccessHandler())
-                .permitAll());
+        );
 
         http.logout(logout -> logout
                 .logoutUrl("/logout")
-                .logoutSuccessUrl("/login"));
+                .logoutSuccessUrl("/auth")
+        );
 
         return http.build();
     }
@@ -42,7 +43,8 @@ public class SecurityConfiguration {
     public AuthenticationSuccessHandler authSuccessHandler() {
         return (request, response, authentication) -> {
             HttpSession session = request.getSession();
-            session.setAttribute("user", authentication.getPrincipal());
+            var user = ((User) authentication.getPrincipal());
+            session.setAttribute("user", new UserDto(user.getId(), user.getUsername(), user.getLocations()));
             response.sendRedirect("/home");
         };
     }

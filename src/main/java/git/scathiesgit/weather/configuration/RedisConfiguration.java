@@ -1,8 +1,8 @@
 package git.scathiesgit.weather.configuration;
 
+import git.scathiesgit.weather.configuration.properties.RedisConfigProperties;
 import git.scathiesgit.weather.model.Weather;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -13,15 +13,11 @@ import org.springframework.data.redis.core.RedisTemplate;
 @RequiredArgsConstructor
 public class RedisConfiguration {
 
-    @Value("${spring.data.redis.host}")
-    private final String host;
-
-    @Value("${spring.data.redis.port}")
-    private final int port;
+    private final RedisConfigProperties redisProps;
 
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
-        return new LettuceConnectionFactory(host, port);
+        return new LettuceConnectionFactory(redisProps.getHost(), redisProps.getPort());
     }
 
     @Bean

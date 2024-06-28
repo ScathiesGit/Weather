@@ -1,12 +1,13 @@
 package git.scathiesgit.weather.service;
 
-import git.scathiesgit.weather.model.Weather;
+import git.scathiesgit.weather.dto.response.WeatherDto;
 
-import java.util.Set;
+import java.util.List;
 
 public interface WeatherService {
 
-    Set<Weather> findByCityName(String cityName);
+    List<WeatherDto> fetch(String name);
 
-    Weather findByCoordinates(String lat, String lon);
+    WeatherDto fetch(String latitude, String longitude);
+
 }

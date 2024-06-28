@@ -23,12 +23,13 @@ public class HibernateUserRepository implements UserRepository {
 
     @Override
     public Optional<User> findByUsername(String username) {
-        return ofNullable(executor.executeQuery(session -> {
-            User user = session.createQuery("from User u where u.username = :username", User.class)
-                    .setParameter("username", username)
-                    .uniqueResult();
-            Hibernate.initialize(user.getLocations());
-            return user;
-        }));
+        return ofNullable(
+                executor.executeQuery(session -> {
+                    User user = session.createQuery("from User u where u.username = :username", User.class)
+                            .setParameter("username", username)
+                            .uniqueResult();
+                    Hibernate.initialize(user.getLocations());
+                    return user;
+                }));
     }
 }

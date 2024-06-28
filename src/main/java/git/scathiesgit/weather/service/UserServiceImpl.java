@@ -1,8 +1,12 @@
 package git.scathiesgit.weather.service;
 
+import git.scathiesgit.weather.dto.UserDto;
+import git.scathiesgit.weather.dto.request.DeleteLocationDto;
+import git.scathiesgit.weather.dto.request.SaveLocationDto;
+import git.scathiesgit.weather.dto.response.WeatherDto;
 import git.scathiesgit.weather.model.Location;
 import git.scathiesgit.weather.model.User;
-import git.scathiesgit.weather.model.Weather;
+import git.scathiesgit.weather.repository.LocationRepository;
 import git.scathiesgit.weather.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,42 +19,52 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final WeatherService weatherService;
-
     private final UserRepository userRepo;
+
+    private final LocationRepository locationRepository;
 
     private final PasswordEncoder passEncoder;
 
+    private final WeatherServiceImpl weatherService;
+
     @Override
-    public User saveUser(User user) {
+    public void save(User user) {
         user.setPassword(passEncoder.encode(user.getPassword()));
-        return userRepo.save(user);
+        userRepo.save(user);
     }
 
     @Override
-    public void saveUserLocation(Location location, User user) {
-        user.getLocations().add(location);
+    public List<WeatherDto> loadWeather(UserDto user) {
+        return user.locations().stream()
+                .map(location -> weatherService.fetch(location.getLat(), location.getLon()))
+                .toList();
     }
 
-    public List<Weather> loadUserWeathers(User user) {
-        return user.getLocations()
-                .stream()
-                .map(location -> {
-                    var weather = weatherService.findByCoordinates(location.getLat(), location.getLon());
-                    weather.setName(location.getName());
-                    return weather;
-                })
-                .toList();
+    @Override
+    public void saveLocation(UserDto user, SaveLocationDto location) {
+        locationRepository.save(
+                Location.builder()
+                        .userId(user.id())
+                        .lat(location.lat())
+                        .lon(location.lon())
+                        .build()
+        );
+    }
+
+    @Override
+    public void deleteLocation(UserDto user, DeleteLocationDto location) {
+        locationRepository.delete(
+                Location.builder()
+                        .userId(user.id())
+                        .lat(location.lat())
+                        .lon(location.lon())
+                        .build()
+        );
     }
 
     @Override
     public User loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepo.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Username " + username + " not found!"));
-    }
-
-    @Override
-    public void deleteUserLocation(Location location, User user) {
-        user.getLocations().remove(location);
     }
 }

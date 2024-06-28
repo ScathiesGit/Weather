@@ -1,4 +1,4 @@
-package git.scathiesgit.weather.controller;
+package git.scathiesgit.weather.controller.exception.handling;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -11,13 +11,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 import static jakarta.servlet.http.HttpServletResponse.*;
-import static java.util.Objects.*;
-import static java.util.stream.Collectors.*;
+import static java.util.Objects.requireNonNull;
+import static java.util.stream.Collectors.joining;
 
 @ControllerAdvice
 public class ExceptionController {

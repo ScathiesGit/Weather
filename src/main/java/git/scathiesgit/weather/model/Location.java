@@ -3,6 +3,9 @@ package git.scathiesgit.weather.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -25,4 +28,6 @@ public class Location {
 
     @Column(name = "longitude")
     private String lon;
+
 }
+

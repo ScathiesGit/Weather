@@ -63,7 +63,8 @@
             <div th:each="weather: ${weathers}" class="col">
 
                 <div class="card-body">
-                    <h4 class="font" th:text="|${weather.name}, ${weather.country}|">Moscow, RU</h4>
+                    <h4 class="font" th:utext="|${weather.name}, ${weather.country}</br>[${weather.lat + ' : ' + weather.lon }]|">
+                        Moscow, RU</h4>
                     <div class="current-temp" style="display: inline-block;">
                         <img class="img-fluid align-middle" width="65" height="65"
                              th:attr="src=@{'/img/search/' + ${weather.icon} + '.png'}">
@@ -77,6 +78,7 @@
                     <form action="/home/delete" method="post">
                         <input type="hidden" name="lat" th:value="${weather.lat}">
                         <input type="hidden" name="lon" th:value="${weather.lon}">
+                        <input type="hidden" name="userId" th:value="${session.user.id}">
                         <button type="submit" class="btn btn-sm btn-outline-danger">—</button>
                     </form>
                 </div>

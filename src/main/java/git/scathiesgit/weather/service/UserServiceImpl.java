@@ -36,30 +36,37 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<WeatherDto> loadWeather(UserDto user) {
         return user.locations().stream()
-                .map(location -> weatherService.fetch(location.getLat(), location.getLon()))
+                .map(location -> {
+                    var weather = weatherService.fetch(location.getLat(), location.getLon());
+                    weather.setName(location.getName());
+                    return weather;
+                })
                 .toList();
     }
 
     @Override
-    public void saveLocation(UserDto user, SaveLocationDto location) {
-        locationRepository.save(
-                Location.builder()
-                        .userId(user.id())
-                        .lat(location.lat())
-                        .lon(location.lon())
-                        .build()
-        );
+    public void saveLocation(UserDto user, SaveLocationDto locationDto) {
+        var location = Location.builder()
+                .userId(user.id())
+                .lat(locationDto.lat())
+                .lon(locationDto.lon())
+                .name(locationDto.name())
+                .build();
+
+        locationRepository.save(location);
+        user.locations().add(location);
     }
 
     @Override
-    public void deleteLocation(UserDto user, DeleteLocationDto location) {
-        locationRepository.delete(
-                Location.builder()
-                        .userId(user.id())
-                        .lat(location.lat())
-                        .lon(location.lon())
-                        .build()
-        );
+    public void deleteLocation(UserDto user, DeleteLocationDto locationDto) {
+        var location = Location.builder()
+                .userId(user.id())
+                .lat(locationDto.lat())
+                .lon(locationDto.lon())
+                .build();
+
+        locationRepository.delete(location);
+        user.locations().remove(location);
     }
 
     @Override

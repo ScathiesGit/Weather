@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface WeatherService {
 
-    List<WeatherDto> fetch(String name);
+    List<WeatherDto> fetch(String cityName);
 
     WeatherDto fetch(String latitude, String longitude);
 

@@ -1,5 +1,5 @@
 package git.scathiesgit.weather.dto.request;
 
-public record DeleteLocationDto(String lat, String lon) {
+public record DeleteLocationDto(Long userId, String lat, String lon) {
 
 }

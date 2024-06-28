@@ -17,6 +17,12 @@ public class HibernateLocationRepository implements LocationRepository {
 
     @Override
     public void delete(Location location) {
-        executor.execute(session -> session.remove(location));
+        executor.execute(session -> session
+                .createQuery("DELETE FROM Location l " +
+                        "WHERE l.lat = :lat and l.lon = :lon and l.userId = :userId")
+                .setParameter("lat", location.getLat())
+                .setParameter("lon", location.getLon())
+                .setParameter("userId", location.getUserId())
+                .executeUpdate());
     }
 }

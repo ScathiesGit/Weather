@@ -8,6 +8,10 @@ import org.springframework.web.client.RestClient;
 
 import java.util.*;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
+import static java.util.Objects.*;
+import static java.util.Optional.*;
 
 @Repository
 public class WeatherOpenApiRepository implements WeatherRepository {
@@ -26,28 +30,20 @@ public class WeatherOpenApiRepository implements WeatherRepository {
 
     @Override
     public Set<Weather> findByCityName(String name) {
-        var weathers = new HashSet<>(Objects.requireNonNull(find(() -> urlByCity.formatted(name))
+        return requireNonNull(find(() -> urlByCity.formatted(name))
                 .body(new ParameterizedTypeReference<List<Weather>>() {
-                })));
-
-//                .stream()
-//                .map(location -> {
-//                    var updWeather = findByCoordinates(location.getLat(), location.getLon());
-//                    updWeather.setName(name);
-//                    return updWeather;
-//                })
-//                .collect(toSet());
-
-        if (weathers.isEmpty()) {
-            throw new IllegalArgumentException("Нет данных для локации");
-        }
-
-        return weathers;
+                }))
+                .stream()
+                .map(rawWeather -> findByCoordinates(rawWeather.getLat(), rawWeather.getLon()))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .peek(weather -> weather.setName(name))
+                .collect(Collectors.toSet());
     }
 
     @Override
     public Optional<Weather> findByCoordinates(String lat, String lon) {
-        return Optional.ofNullable(
+        return ofNullable(
                 find(() -> urlByCoordinates.formatted(lat, lon)).body(Weather.class)
         );
     }

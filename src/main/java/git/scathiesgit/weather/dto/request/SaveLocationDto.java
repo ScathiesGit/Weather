@@ -1,4 +1,4 @@
 package git.scathiesgit.weather.dto.request;
 
-public record SaveLocationDto(String lat, String lon) {
+public record SaveLocationDto(Long userId, String name, String lat, String lon) {
 }

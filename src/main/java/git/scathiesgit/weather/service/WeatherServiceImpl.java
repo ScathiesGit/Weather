@@ -17,8 +17,8 @@ public class WeatherServiceImpl implements WeatherService {
     private final WeatherRepository weatherRepo;
 
     @Override
-    public List<WeatherDto> fetch(String name) {
-        return weatherRepo.findByCityName(name)
+    public List<WeatherDto> fetch(String cityName) {
+        return weatherRepo.findByCityName(cityName)
                 .stream()
                 .map(this::toWeatherDto)
                 .toList();
@@ -32,6 +32,17 @@ public class WeatherServiceImpl implements WeatherService {
     }
 
     private WeatherDto toWeatherDto(Weather weather) {
-        return null;
+        return WeatherDto.builder()
+                .name(weather.getName())
+                .temp(weather.getTemp())
+                .description(weather.getDescription())
+                .country(weather.getCountry())
+                .clouds(weather.getClouds())
+                .windSpeed(weather.getWindSpeed())
+                .lat(weather.getLat())
+                .lon(weather.getLon())
+                .icon(weather.getIcon())
+                .visibility(weather.getVisibility())
+                .build();
     }
 }

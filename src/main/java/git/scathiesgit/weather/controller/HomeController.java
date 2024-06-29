@@ -23,7 +23,7 @@ public class HomeController {
     private final WeatherService weatherService;
 
     @GetMapping
-    public String homePage(@SessionAttribute UserDto user, Model model) {
+    public String homePage(@SessionAttribute(required = false) UserDto user, Model model) {
         if (user != null) {
             initModel(model, user);
         }

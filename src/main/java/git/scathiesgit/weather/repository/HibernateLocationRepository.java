@@ -1,6 +1,8 @@
 package git.scathiesgit.weather.repository;
 
 import git.scathiesgit.weather.model.Location;
+import git.scathiesgit.weather.repository.exception.LocationAlreadyExistsException;
+import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -12,7 +14,11 @@ public class HibernateLocationRepository implements LocationRepository {
 
     @Override
     public void save(Location location) {
-        executor.execute(session -> session.persist(location));
+        try {
+            executor.execute(session -> session.persist(location));
+        } catch (Exception e) {
+            throw new LocationAlreadyExistsException(e);
+        }
     }
 
     @Override

@@ -1,5 +1,7 @@
 package git.scathiesgit.weather.controller.exception.handling;
 
+import git.scathiesgit.weather.repository.exception.LocationAlreadyExistsException;
+import git.scathiesgit.weather.repository.exception.UserAlreadyExistsException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.SystemProperties;
@@ -25,23 +27,20 @@ public class ExceptionController {
         return "home";
     }
 
-    @ExceptionHandler(ConstraintViolationException.class)
-    public String handlerDatabaseException(Model model, HttpServletResponse resp, HttpServletRequest req) {
-        var html = "";
-        var message = "";
-        if (req.getServletPath().equals("/registration")) {
-            message = "Имя занято";
-            html = "registration";
-        } else {
-            message = "Такая локация у вас уже есть";
-            html = "home";
-        }
-        writeResp(model, resp, SC_CONFLICT, message);
-        return html;
+    @ExceptionHandler(LocationAlreadyExistsException.class)
+    public String handleLocationAlreadyExistsException(Model model, HttpServletResponse resp) {
+        writeResp(model, resp, SC_CONFLICT, "Такая локация уже добавлена");
+        return "found-weathers";
+    }
+
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public String handleUserAlreadyExistsException(Model model, HttpServletResponse resp) {
+        writeResp(model, resp, SC_CONFLICT, "Пользователь с таким именем уже есть");
+        return "registration";
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public String handlerValidationException(Model model, HttpServletResponse resp, MethodArgumentNotValidException e) {
+    public String handleValidationException(Model model, HttpServletResponse resp, MethodArgumentNotValidException e) {
         var message = Arrays.stream(requireNonNull(e.getDetailMessageArguments()))
                 .map(Object::toString)
                 .collect(joining(SystemProperties.getLineSeparator()))

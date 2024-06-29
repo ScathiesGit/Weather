@@ -38,6 +38,8 @@ public class UserServiceImpl implements UserService {
         return user.locations().stream()
                 .map(location -> {
                     var weather = weatherService.fetch(location.getLat(), location.getLon());
+                    weather.setLat(location.getLat());
+                    weather.setLon(location.getLon());
                     weather.setName(location.getName());
                     return weather;
                 })

@@ -21,22 +21,26 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable);
 
-        http.authorizeHttpRequests(req -> req
-                .requestMatchers("/auth/reg", "/home").permitAll()
-                .anyRequest().authenticated());
+        http.authorizeHttpRequests(
+                req -> req
+                        .requestMatchers("/auth/reg", "/home", "/auth").permitAll()
+                        .anyRequest().authenticated()
+        );
 
-        http.formLogin(login -> login
-                .loginPage("/auth")
-                .successHandler(authSuccessHandler())
-                .permitAll());
+        http.formLogin(
+                login -> login
+                        .loginPage("/auth")
+                        .successHandler(authSuccessHandler())
+        );
 
-        http.logout(logout -> logout
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/auth"));
+        http.logout(
+                logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/auth")
+        );
 
         return http.build();
     }
-
 
     @Bean
     public AuthenticationSuccessHandler authSuccessHandler() {

@@ -22,7 +22,7 @@ public class RedisConfiguration {
 
     @Bean
     public RedisTemplate<String, Weather> redisTemplate() {
-        RedisTemplate<String, Weather> template = new RedisTemplate<>();
+        final RedisTemplate<String, Weather> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory());
         return template;
     }
